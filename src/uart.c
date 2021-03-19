@@ -77,7 +77,6 @@ float readFromUart() {
             if (compare_CRC(rx_buffer, rx_length)) {
                 float send_command;
                 memcpy(&send_command, rx_buffer + 3, 4);
-                printf("%i Bytes lidos : %f\n", rx_length, send_command);
                 return send_command;
             }
         }
