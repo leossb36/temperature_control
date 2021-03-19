@@ -1,10 +1,10 @@
 CC = gcc
-LDFLAGS =
+LDFLAGS = -pthread -lwiringPi -BME280_FLOAT_ENABLE
 BLDDIR = .
 INCDIR = $(BLDDIR)/inc
 SRCDIR = $(BLDDIR)/src
 OBJDIR = $(BLDDIR)/obj
-CFLAGS = -c -Wall -I$(INCDIR)
+CFLAGS = -c -Wall -I$(INCDIR) -pthread -lwiringPi
 SRC = $(wildcard $(SRCDIR)/*.c)
 OBJ = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 EXE = bin/bin
