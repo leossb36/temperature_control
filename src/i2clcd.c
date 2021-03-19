@@ -31,27 +31,21 @@ void typeln(const char *s);
 void typeChar(char val);
 int fd;  // seen by all subroutines
 
-int main()   {
+void setupLCD() {
 
-    if (wiringPiSetup () == -1) exit (1);
-
+    wiringPiSetup();
     fd = wiringPiI2CSetup(I2C_ADDR);
-
-    //printf("fd = %d ", fd);
-
     lcd_init(); // setup LCD
-
-    // char array1[] = "Hello world!";
-
-    lcdLoc(LINE1);
-    typeln("ola mundo");
-    lcdLoc(LINE2);
-    typeln("testing");
-
-    return 0;
-
 }
 
+void writeOnLCD(char *line1, char *line2) {
+    setupLCD();
+    lcdLoc(LINE1);
+    typeln(line1);
+    lcdLoc(LINE2);
+    typeln(line2);
+
+}
 
 // float to string
 void typeFloat(float myFloat)   {
