@@ -1,7 +1,6 @@
 #include "crc16.h"
-#include "uart.h"
-#include "funcoes_auxiliares.h"
 #include <stdio.h>
+#include <string.h>
 
 short CRC16(short crc, char data)
 {
@@ -50,21 +49,15 @@ short calcula_CRC(unsigned char *commands, int size) {
 	return crc;
 }
 
-int verifica_crc(unsigned char *mensagem, int size){
-    bytesCRC crc_recebido, crc_calculado;
+int compare_CRC(unsigned char *commands, int size) {
+    short crc_received, crc_to_compare;
 
-    crc_recebido.bytes[0] = le_byte_uart();
-    crc_recebido.bytes[1] = le_byte_uart();
+    memcpy(&crc_received, commands + (size - 2), 2);
 
-    crc_calculado.crc = calcula_CRC(mensagem, size);
-        if (crc_calculado.crc == crc_recebido.crc)
-            return 1;
-        else
-        {
-            printf("\n** Erro de CRC **\n");
-            printf("CRC Recebido:\n%x\n%x\n", crc_recebido.bytes[1], crc_recebido.bytes[0]);
-            printf(" CRC Calculado:\n0x%x\n0x%x\n", crc_calculado.bytes[1], crc_calculado.bytes[0]);
-            return 0;
-        }
+    crc_to_compare = calcula_CRC(commands, size - 2);
+
+    if(crc_received == crc_to_compare)
+        return 1;
+
+    return 0;
 }
-
