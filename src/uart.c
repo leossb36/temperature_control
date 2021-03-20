@@ -50,7 +50,6 @@ int sendMessageToUart(int subcode_command) {
 
     if (uart0_filestream != -1)
     {
-        printf("Escrevendo caracteres na UART ...");
         int count = write(uart0_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0]));
         if(count < 0) {
             return 1;

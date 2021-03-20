@@ -44,8 +44,6 @@ int main(void) {
         pid_atualiza_referencia(tr);
         pid = pid_controle(ti);
 
-        printf("PID: %f\n", pid);
-
         if (pid > 0) {
             using_resistor(pid);
             using_fan(0);
@@ -68,13 +66,11 @@ int main(void) {
         }
 
         sprintf(line_1, "TI:%.2f TR:%.2f", ti, tr);
-        sprintf(line_2, "TE:%.2f ::", te);
-
+        sprintf(line_2, "TE:%.2f", te);
         writeOnLCD(line_1, line_2);
-
         writeOnCSVFile(ti, tr, te, resistor, fan);
-
-        sleep(1);
+        usleep(1000000);
     }
+
     return 0;
 }
