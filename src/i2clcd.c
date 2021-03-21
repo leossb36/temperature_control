@@ -39,7 +39,6 @@ void setupLCD() {
 }
 
 void writeOnLCD(char *line1, char *line2) {
-    setupLCD();
     lcdLoc(LINE1);
     typeln(line1);
     lcdLoc(LINE2);
