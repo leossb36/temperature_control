@@ -105,8 +105,8 @@ void write_on_data_box(WINDOW *data_box, WINDOW *result_box, WINDOW *adjust_box,
     mvwprintw(result_box, 3, resultSize, "%.2f ºC", temp_ext);
     mvwprintw(result_box, 4, resultSize, "%.2f ºC", temp_pot);
     mvwprintw(result_box, 5, resultSize, "%.2f", pid);
-    mvwprintw(result_box, 6, resultSize, "%d", (int)resistor);
-    mvwprintw(result_box, 7, resultSize, "%d", (int)fan);
+    mvwprintw(result_box, 6, resultSize, "%d %%", (int)resistor);
+    mvwprintw(result_box, 7, resultSize, "%d %%", (int)fan);
 
     mvwprintw(adjust_box, 4, adjustSize - 3, "PGUP");
     mvwprintw(adjust_box, 4, adjustSize + 3, "PGDOWN");
