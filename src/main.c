@@ -15,7 +15,7 @@
 
 pthread_t tid;
 
-void cancelProcessUart(int signal) {
+void cancelProcess(int signal) {
     using_fan(0);
     using_resistor(0);
     ClrLcd();
@@ -27,7 +27,7 @@ void cancelProcessUart(int signal) {
 
 int main(int argc, char **argv) {
 
-    signal(SIGINT, cancelProcessUart);
+    signal(SIGINT, cancelProcess);
 
     pthread_create(&tid, NULL, &menu_execution, NULL);
 
