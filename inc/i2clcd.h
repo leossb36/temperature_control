@@ -3,4 +3,5 @@
 #endif
 
 void setupLCD();
+void ClrLcd(void);
 void writeOnLCD(char *, char *);

@@ -92,7 +92,7 @@ float get_temperature(int type) {
     float temperaturaFromUart;
     openUartFileStream();
     sendMessageToUart(type);
-    usleep(1000000);
+    usleep(100000);
     temperaturaFromUart = readFromUart();
 
     closeUart();

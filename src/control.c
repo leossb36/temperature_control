@@ -24,7 +24,7 @@ void update_display() {
 
     temp_ref = getReferencialTemp();
 
-    if (temp_int > 0 && temp_ext > 0 && temp_ref > 0) {
+    if (temp_int > 0 && temp_ext > 0 && temp_ref > 0 && temp_pot > 0) {
         pid_atualiza_referencia(temp_ref);
         pid = pid_controle(temp_int);
 
@@ -51,7 +51,6 @@ void update_display() {
 
         writeData();
     }
-    usleep(1000000);
 }
 
 void writeData() {

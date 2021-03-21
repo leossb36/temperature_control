@@ -18,6 +18,7 @@ pthread_t tid;
 void cancelProcessUart(int signal) {
     using_fan(0);
     using_resistor(0);
+    ClrLcd();
     closeUart();
     close_bme();
     endwin();
@@ -39,6 +40,7 @@ int main(int argc, char **argv) {
 
     while(1) {
         update_display();
+        usleep(800000);
     }
 
     return 0;
