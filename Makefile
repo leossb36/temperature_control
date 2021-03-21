@@ -1,5 +1,5 @@
 CC = gcc
-LDFLAGS = -pthread -lwiringPi -BME280_FLOAT_ENABLE
+LDFLAGS = -pthread -lwiringPi -BME280_FLOAT_ENABLE -lncurses
 BLDDIR = .
 INCDIR = $(BLDDIR)/inc
 SRCDIR = $(BLDDIR)/src
