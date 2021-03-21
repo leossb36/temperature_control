@@ -1,129 +1,102 @@
-# Projeto 1 - 2020/2
+## Projeto 1 - 2020/2 - FSE
 
-Projeto 1 da disciplina de Fundamentos de Sistemas Embarcados (2020/2)
-
-## 1. Objetivos
-
-Este trabalho tem por objetivo a implementação do controle de temperatura de um sistema que possui internamente dois dispositivos para alterar sua temperatura. O primeiro é um resistor de potência de 15 Watts utilziado para aumentar temperatura e o segundo, uma ventoinha que puxa o ar externo (à temperatura ambiente) para reduzir a temperatura. 
-
-A temperatura de referência (TR) deve poder ser definida pelo usuário do sistema de duas maneiras:
-1. Através de um Potenciômetro;
-2. Através de entrada de teclado no terminal.
-
-O controle de temperatura do sistema deve ser realizado utilizando a abordagem de controle PID (Proporcional Integral Derivativo). O PID é um dos tipos mais simples de algoritmos de controle que proporciona um bom desempenho para uma grande variedade de aplicações.
-
-Neste caso, quando o valor medido de temperatura ficar abaixo do limite inferior, o controlador deverá acionar o resistor de potência para aquecer o sistema. Caso a temperatura medida esteja acima do limite superior, o controlador deve desligar a resistência e acionar a ventoinha. 
-
-## 2. Controle PID
-
-O conceito fundamental de um controlador se baseia em monitorar uma ou mais variáveis de um processo (neste caso a temperatura interna) e medir a diferença entre seu valor atual (TI) a uma valor de referência (TR) desejado. A partir dessa medida de Erro = TR - TI, toma-se uma ação de correção para que o sistema alcançe exatamente o valor desejado.
-
-Exemplificando, neste sistema, caso a temperatura esteja abaixo da desejada, a resistência deve ser ligada de modo a aquecer o mesmo até chegar à temperatura desejada. Do contrário, caso a temperatura esteja acima da desejada, a ventoinha deve ser ligada para que a temperatura seja diminuida.
-
-A abordagem mais simples de controle descrita acima é chamada de controle On-Off ou Liga-Desliga em que a fonte de aquecimento ou de resfriamento são ligadas ou desligadas de modo completo. Esta estratégia funciona, porém sua operação impede que o sistema repouse exatamente em uma temperatura desejada, ao invés disso, o sistema oscila em torno da temperatura de referência conforme mostrado na figura abaixo.
-
-<!-- <div style="text-align:center"><img src="/figuras/controle_on_off.png" /></div> -->
-
-![PID](/figuras/controle_on_off.png)
-
-Uma abordagem um pouco mais elaborada, é a da utilização do controle Proporcional, Integral e Derivativo (PID) que une três tipos de ações sobre a variável de controle para minimizar o erro do sistema até que o mesmo alcançe a referência desejada. No caso deste sistema, nossa variável de controle é o acionamento da resistência (R) e nosso erro é a diferença entre a temperatura de referência e a temperatura interna do sistema (Erro = TR - TI).
-
-Detalhando as 3 ações do PID temos:
-- Controle Proporcional (P): ajusta a variável de controle de forma proporcional ao erro, ou seja, quanto maior o erro, maior a intensidade de acionamento do resistor (0 a 100%).
-- Controle Integral (PI): ajusta a variável de controle baseando-se no tempo em que o erro acontece, acumulando este erro (integral).
-- Controle Derivativo (PD): ajusta a variável de controle tendo como base a taxa de variação do erro ou a velocidade com a qual o sistema está variando o erro.
-
-![PID](https://upload.wikimedia.org/wikipedia/commons/4/43/PID_en.svg)
+|Matrícula | Aluno |
+| -- | -- |
+| 15/0135521 |  Leonardo dos S. S. Barreiros |
 
 
-<!-- A histerese é definida como a diferença entre o limite superior e o inferior da variável a ser controlada. Por exemplo, se a temperatura de operação do sistema for definida como 40˚C com histerese de 4˚C, os limites inferior e superior serão respectivamente de 38˚C e 42˚C. -->
+## Objetivo
 
-## 3. Componentes do Sistema
+Este trabalho tem por objetivo a implementação de um sistema de controle de temperatura, em que, através de uma Raspberry pi 4 realizamos toda a comunicação e elaboração de um ambiente controlado. Neste ambiente controlado possuimos os seguintes sensores:
 
-O sistema como um todo é composto por:
-1. Ambiente fechado controlado com o resistor de potência e ventoinha;
-2. 01 Sensor LM35 para a medição da temperatura interna (TI) do ambiente fechado;
-3. 01 Sensor BME280 (I2C) para a medição da temperatura externa (TE);
-4. 01 módulo Display LCD 16x2 com circuito I2C integrado (Controlador HD44780);
-5. 01 Conversor lógico bidirecional (3.3V / 5V);
-6. Circuito de potência com 2 relés;
-6. 01 Arduino Micro;
-7. Potenciômetro;
-8. Raspberry Pi 4;
+- 01 Sensor LM35 para a medição da temperatura interna (TI) do ambiente controlado;
+- 01 Sensor BME280 (I2C) para a medição da temperatura externa (TE);
+- 01 módulo Display LCD 16x2 com circuito I2C integrado (Controlador HD44780);
+- 01 Conversor lógico bidirecional (3.3V / 5V);
+- Circuito de potência com 2 relés;
+- 01 Arduino Micro;
+- Potenciômetro para regular qual a temperatura referencial a ser obtida;
+- Raspberry Pi 4;
 
-![Figura](/figuras/Figura_Trabalho_1_v2.png)
+## Dos requisitos do trabalho
 
-## 4. Conexões entre os módulos do sistema
+- Possui um menu interativo, onde o usuário pode acompanhar as temperaturas que são solicitadas, além de poder alternar entre usar temperatura pelo potenciomentro e uma temperatura manual;
+- Realiza leitura da temperatura interna;
+- Realiza leitura da temperatura ambiente;
+- Realiza leitura da temperatura Potenciômentro;
+- Realiza leitura de temperaturas através do controlador PID;
+- Realiza a escrita e atualização de dados no Display LCD;
+- Realiza o armazenamento dos dados em um arquivo CSV - nomeado como __temperature_control.csv__;
+- Código Modularizado;
 
-1. O sensor de temperatura BM280 está ligado ao barramento I2C e utiliza o endereço (0x76);
-2. O módulo de display LCD está conectado ao barramento I2C utilizando o endereço 0x27;
-3. O resistor de potência e a ventoinha estão ambos ligados às portas GPIO e são acionados através do circuito de potência com relés;  
-    3.1. Resistor: GPIO 23 ou Pino 16 (Board)  
-    3.2. Ventoinha: GPIO 24 ou Pino 18 (Board)  
-    3.3. Atenção: o acionamento dos relés está invertido. Portanto o valor de GPIO como 1 desliga o equipamento enquanto 0 liga (Sugestão: usar a bibliteca bcm2835).  
-4. O Arduino está conectado à placa Raspberry Pi via UART (Protocolo MODBUS);
-5. O potenciômetro é conectado à porta analógica (A1) do Arduino;
-6. O sensor de temperatura LM35 para medição do ambiente controlado está ligado à porta analógica (A0) do Arduino;
+## Compilação
 
-## 5. Requisitos
+Para compilar o trabalho, através do terminal e na raiz do repositório execute o comando:
 
-Os sistema de controle possui os seguintes requisitos:
-1. O código deve ser desenvolvido em C/C++;
-2. O sistema deve implementar o controle de temperatura do ambiente fechado utilizando a técnica de controle PID para o  Resistor e a Ventoinha;
-3. O sistema deve apresentar uma interface de controle via terminal com menu de interação com o usuário e dados de temperaturas (TI, TE, TR) sendo atualizados a cada 1 segundo;
-4. O usuário deve ser capaz de escolher se quer definir a temperatura de referência (TR) através de entrada de teclado ou pelo potenciômetro (Durante a execução do programa);
-5. No caso da temperatura ser definida pelo potenciômetro, o programa deve consultar o valor do potenciômetro através da comunicação UART com o Arduino a cada 1 segundo;
-6. O sistema deve apresentar na tela LCD os valores das temperaturas (TI, TE, TR);
-7. O programa deve gerar um log em arquivo CSV das seguintes informações a cada 02 segundos com os seguintes valores: (Data e hora, temperatura interna, temperatura externa, temperatura definida pelo usuário, valor de acionamento dos atuadores (Resistor e Venoinha em valor percentual)).
-8. O código deve possuir Makefile para compilação;
-9. O sistema deve conter em seu README as instruções de compilação e uso, bem como gráficos* com o resultado de um experimento sendo executado pelo período de 10 minutos com variação da temperatura de referência sendo dada pelo potenciômetro.
- 
-\* Serão necessários dois gráficos. Um deles plotando as temperaturas (Ambiente, Interna e Referência (Potenciômetro)) e outro gráfico com o valor do acionamento dos atuadores (Resistor / Ventoinha) em valor percentual entre -100% e 100%.
+```sh
+$ make all
+```
+Assim será realizado a compilação das bibliotecas e scripts do trabalho.
 
-## 6. Comunicação UART com Arduino
+Em seguida para rodar o trabalho, rode o seguinte comando:
 
-A leitura do valor do potenciômetro deve seguir o mesmo protocolo MODBUS utilizado no [Exercício 2]([referencias/Exercicio_1_UART.pdf](https://gitlab.com/fse_fga/projetos_2020_2/codigo-arduino-exercicio-2)). 
-O Arduino fornece duas informações para o sistema, valor da temperatura interna (Sensor LM35) e valor da temperatura de referência (Potenciômetro).
+```sh
+$ make run
+```
+E então será aberto o menu interativo.
 
-Para acessar as informações via UART envie mensagens em formato MODBUS com o seguinte conteúdo:
+### Utilização
 
-1. Código do Dispositivo (Arduino): 0x01
-2. Leitura de Valor de Temperatura Interna (TI): Código 0x23, Sub-código: 0xC1 + 4 últimos dígitos da matrícula. O retorno será o valor em Float (4 bytes) da temperatura interna do sistema com o pacote no formato MODBUS;
-4. Leitura da temperatura de referência - TR (Potenciômetro): Código 0x23, Sub-código: 0xC2 + 4 últimos dígitos da matrícula. O retorno será o valor em Float (4 bytes) da temperatura de referência definida pelo usuário com o pacote no formato MODBUS;
+![](./assets/menu.jpg)
 
-<p style="text-align: center;">Tabela 1 - Códigos do Protocolo de Comunicação</p>
+O menu possui 4 áreas:
 
-| Código |	Sub-código + Matricula | Comando de Solicitação de Dados |	Mensagem de Retorno |
-|:-:|:-:|:--|:--|
-| **0x23** | **0xC1** N N N N |	Solicita Temperatura Interna  | float (4 bytes) |
-| **0x23** | **0xC2** N N N N |	Solicita Temperatura Potenciômetro	| float (4 bytes) |
+Em Dados a parte de leitura onde irá mostrar as labels de temperaturas e solicitações.
+
+Em Resultados é mostrado todos os valores aferidos.
+
+Em ajuste temos as labels de pgUp e pgDown que são funções para ajustar a temperatura referencial, quando está no modo __TEMPERATURA MANUAL__.
+
+Em comandos tempos duas opções que podem ser escolhidas pelas arrow keys(setas) do seu teclado direita ou esquerda, para alternar entre __POTENCIÔMETRO__ e __TEMPERATURA MANUAL__.
+
+É importante observar que a temperatura referencial somente irá mudar se estiver com o comando __TEMPERATURA MANUAL__ acionado, e para isto acontecer basta apertar a seta para __direita__. Caso contrario não irá funcionar.
 
 
-## 7. Critérios de Avaliação
+A temperatura referencial é limitada entre a __temperatura ambiente__ como sendo esta a menor possível e a a temperatura máxima de __99 ºC__. E para ajustar a temperatura bastar usar as __setas__ para cima para __aumentar__ e para __baixo__ para diminuir.
 
-A avaliação será realizada seguindo os seguintes critérios:
+![](./assets/manual.jpg)
+![](./assets/display.jpg)
 
-|   ITEM    |   COMENTÁRIO  |   VALOR   |
-|------------------------|---------------------------------------------------------------------------------------------------------|---------|
-|**Implementação do controlador PID** | Correta implementação do controlador PID (Resistor / Venotinha), incluindo a leitura das temperaturas e acionamento dos atuadores. |    2,0 |
-|**Menu de controle**        | Correta implementação do menu com as opções de acesso do usuário e sua atualização de informações. | 1,0 |
-|**Leitura da Temperatura Ambiente**| Leitura dos valores de Temperatura Ambiente (Sensor BME280). | 0,5 |
-|**Leitura da Temperatura Interna e Potenciômetro**| Leitura dos valores de Temperatura Internet e Potenciômetro através da comunicação MODBUS-UART. | 1,5 |
-|**Mostrador no LCD**        | Apresentação das 3 temperatudas no LCD. | 1,0 |
-|**Armazenamento em arquivo**| Armazenamento em arquivo CSV dos dados medidos. |   1,0 |
-|**Qualidade do Código**     | Utilização de boas práticas como o uso de bons nomes, modularização e organização em geral.    |  2,0 |
-|**README com Experimento** | Documentação README com instruçoes de compilaçõa, uso e relatório do experimento com o gráfico. |  1,0 |
+O programa foi divido em duas threads, a thread principal que executa as atualizações dos dados, e a secundaria que executa o menu. Dentro da que executa a atualização dos dados, enquanto os dados são validados e atualizados ao final da execução é feito a escrita em um arquivo csv, nomeado como __temperature control.csv__. Toda vez que um dado valido é solicitado este mesmo será escrito neste arquivo.
 
-|**Pontuação Extra**         |   Qualidade e usabilidade acima da média.  |  0,5   |
+Dentro do csv encontramos a seguinte estrutura:
 
-## 7. Referências
-
-[PID - Wikipedia](https://pt.wikipedia.org/wiki/Controlador_proporcional_integral_derivativo)  
-[Driver da Bosh para o sensor BME280](https://github.com/BoschSensortec/BME280_driver)  
-[Biblioteca BCM2835 - GPIO](http://www.airspayce.com/mikem/bcm2835/)  
-[Controle do LCD 16x2 em C](http://www.bristolwatch.com/rpi/i2clcd.htm)  
-[Biblioteca WiringPi GPIO](http://wiringpi.com)  
-[PWM via WiringPi](https://www.electronicwings.com/raspberry-pi/raspberry-pi-pwm-generation-using-python-and-c)
+- timestamp: para registrar a data em formato DD-MM-AAAA HH:MM:SS;
+- Temperatura Interna: registro da temperatura interna solicitada; 
+- Temperatura Referencial: registro da temperatura referencial solicitada; 
+- Temperatura Externa: registro da temperatura externa solicitada; 
+- Ventoinha: registro da intensidade da ventoinha de acordo com o pid; 
+- resistor: registro da intensidade do resistor de acordo com o pid;
 
 
+Para encerrar o programa, apenas aperte __ctrl+c__. O programa irá receber o sinal sigint e executar a função __cancelProcess__,
+que irá desligar a ventoinha, o resistor, limpar o display LCD, fechar a uart, desligar o sensor BME e por ultimo finalizar a execução do programa, tudo nesta ordem. 
 
+## Dos Resultados
+
+Título: Temperaturas x tempo (onde td veio do potenciômetro nesse gráfico):
+
+Legendas
+- TI = __Temperatura interna__, em ºC;
+- TE = __Temperatura externa__, em ºC;
+- TR = __Temperatura definida pelo usuário__ (potenciômetro ou manual), em ºC;
+
+![](./assets/plotTemp.jpg)
+
+Título: Resistor & ventoínha x tempo
+
+Legendas: 
+- FAN = Valor de acionamento da __ventoínha__, em percentagem;
+- RES = Valor de acionamento do __resistor__, em percentagem.
+
+![](./assets/plotRSVT.jpg)
