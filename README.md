@@ -7,7 +7,7 @@
 
 ## Objetivo
 
-Este trabalho tem por objetivo a implementação de um sistema de controle de temperatura, em que, através de uma Raspberry pi 4 realizamos toda a comunicação e elaboração de um ambiente controlado. Neste ambiente controlado possuimos os seguintes sensores:
+<p align="justify">Este trabalho tem por objetivo a implementação de um sistema de controle de temperatura, em que, através de uma Raspberry pi 4 realizamos toda a comunicação e elaboração de um ambiente controlado. Neste ambiente controlado possuimos os seguintes sensores:
 
 - 01 Sensor LM35 para a medição da temperatura interna (TI) do ambiente controlado;
 - 01 Sensor BME280 (I2C) para a medição da temperatura externa (TE);
@@ -20,14 +20,14 @@ Este trabalho tem por objetivo a implementação de um sistema de controle de te
 
 ## Dos requisitos do trabalho
 
-- Possui um menu interativo, onde o usuário pode acompanhar as temperaturas que são solicitadas, além de poder alternar entre usar temperatura pelo potenciomentro e uma temperatura manual;
-- Realiza leitura da temperatura interna;
-- Realiza leitura da temperatura ambiente;
-- Realiza leitura da temperatura Potenciômentro;
-- Realiza leitura de temperaturas através do controlador PID;
-- Realiza a escrita e atualização de dados no Display LCD;
-- Realiza o armazenamento dos dados em um arquivo CSV - nomeado como __temperature_control.csv__;
-- Código Modularizado;
+<p align="justify"> [1] - Possui um menu interativo, onde o usuário pode acompanhar as temperaturas que são solicitadas, além de poder alternar entre usar temperatura pelo potenciomentro e uma temperatura manual.
+<p align="justify"> [2] - Realiza leitura da temperatura interna.
+<p align="justify"> [3] - Realiza leitura da temperatura ambiente.
+<p align="justify"> [4] - Realiza leitura da temperatura Potenciômentro.
+<p align="justify"> [5] - Realiza leitura de temperaturas através do controlador PID.
+<p align="justify"> [6] - Realiza a escrita e atualização de dados no Display LCD.
+<p align="justify"> [7] - Realiza o armazenamento dos dados em um arquivo CSV - nomeado como <strong>temperature_control.csv</strong>.
+<p align="justify"> [8] - Código Modularizado.
 
 ## Compilação
 
@@ -45,29 +45,25 @@ $ make run
 ```
 E então será aberto o menu interativo.
 
-### Utilização
+## Utilização
 
 ![](./assets/menu.jpg)
 
 O menu possui 4 áreas:
 
-Em Dados a parte de leitura onde irá mostrar as labels de temperaturas e solicitações.
+<p align="justify"> Em Dados a parte de leitura onde irá mostrar as labels de temperaturas e solicitações. Em Resultados é mostrado todos os valores aferidos.Em ajuste temos as labels de pgUp e pgDown que são funções para ajustar a temperatura referencial, quando está no modo <strong>TEMPERATURA MANUAL</strong>.
 
-Em Resultados é mostrado todos os valores aferidos.
+<p align="justify"> Em comandos tempos duas opções que podem ser escolhidas pelas arrow keys(setas) do seu teclado direita ou esquerda, para alternar entre <strong>POTENCIÔMETRO</strong> e <strong>TEMPERATURA MANUAL</strong>.
 
-Em ajuste temos as labels de pgUp e pgDown que são funções para ajustar a temperatura referencial, quando está no modo __TEMPERATURA MANUAL__.
-
-Em comandos tempos duas opções que podem ser escolhidas pelas arrow keys(setas) do seu teclado direita ou esquerda, para alternar entre __POTENCIÔMETRO__ e __TEMPERATURA MANUAL__.
-
-É importante observar que a temperatura referencial somente irá mudar se estiver com o comando __TEMPERATURA MANUAL__ acionado, e para isto acontecer basta apertar a seta para __direita__. Caso contrario não irá funcionar.
+<p align="justify"> É importante observar que a temperatura referencial somente irá mudar se estiver com o comando <strong>TEMPERATURA MANUAL</strong> acionado, e para isto acontecer basta apertar a seta para <strong>direita</strong>. Caso contrario não irá funcionar.
 
 
-A temperatura referencial é limitada entre a __temperatura ambiente__ como sendo esta a menor possível e a a temperatura máxima de __99 ºC__. E para ajustar a temperatura bastar usar as __setas__ para cima para __aumentar__ e para __baixo__ para diminuir.
+<p align="justify"> A temperatura referencial é limitada entre a <strong>temperatura ambiente</strong> como sendo esta a menor possível e a a temperatura máxima de <strong>99 ºC</strong>. E para ajustar a temperatura bastar usar as <strong>setas</strong> para cima para <strong>aumentar</strong> e para <strong>baixo</strong> para diminuir.
 
 ![](./assets/manual.jpg)
 ![](./assets/display.jpg)
 
-O programa foi divido em duas threads, a thread principal que executa as atualizações dos dados, e a secundaria que executa o menu. Dentro da que executa a atualização dos dados, enquanto os dados são validados e atualizados ao final da execução é feito a escrita em um arquivo csv, nomeado como __temperature control.csv__. Toda vez que um dado valido é solicitado este mesmo será escrito neste arquivo.
+<p align="justify"> O programa foi divido em duas threads, a thread principal que executa as atualizações dos dados, e a secundaria que executa o menu. Dentro da que executa a atualização dos dados, enquanto os dados são validados e atualizados ao final da execução é feito a escrita em um arquivo csv, nomeado como <strong>temperature control.csv</strong>. Toda vez que um dado valido é solicitado este mesmo será escrito neste arquivo.
 
 Dentro do csv encontramos a seguinte estrutura:
 
@@ -79,7 +75,7 @@ Dentro do csv encontramos a seguinte estrutura:
 - resistor: registro da intensidade do resistor de acordo com o pid;
 
 
-Para encerrar o programa, apenas aperte __ctrl+c__. O programa irá receber o sinal sigint e executar a função __cancelProcess__,
+<p align="justify"> Para encerrar o programa, apenas aperte <strong>ctrl+c</strong>. O programa irá receber o sinal sigint e executar a função <strong>cancelProcess</strong>,
 que irá desligar a ventoinha, o resistor, limpar o display LCD, fechar a uart, desligar o sensor BME e por ultimo finalizar a execução do programa, tudo nesta ordem. 
 
 ## Dos Resultados
