@@ -6,9 +6,11 @@ volatile int manual = 0;
 
 void *menu_execution() {
 
-    int xMax, yMax, new_x, new_y;
-    int commands_box_size = 5;
+    int box_size_x, box_size_y;
+    int commands_box_size = 3;
     int key = ERR;
+
+    box_size_x = box_size_y = 30;
 
     int hightlight = 0;
 
@@ -21,17 +23,12 @@ void *menu_execution() {
     char options[2][30] = {"[1] - POTENCIOMETRO", "[2] - TEMPERATURA MANUAL"};
 
     // set up initial windows
-    getmaxyx(stdscr, yMax, xMax);
+    getmaxyx(stdscr, box_size_y, box_size_x);
 
-    int databox_size[4] = { yMax - commands_box_size, xMax/4,  0, 0 };
-    int commandbox_size[4] = { commands_box_size, xMax/2 + 1, yMax - commands_box_size, 0 };
-    int resultbox_size[4] = { yMax - commands_box_size, xMax/6, 0, xMax/4 };
-    int referencialbox_size[4] = { yMax - commands_box_size, xMax/10, 0, xMax/2 - xMax/12 - 2 };
-
-    WINDOW *data_box = newwin(databox_size[0], databox_size[1], databox_size[2], databox_size[3]);
-    WINDOW *command_box = newwin(commandbox_size[0], commandbox_size[1], commandbox_size[2], commandbox_size[3]);
-    WINDOW *result_box = newwin(resultbox_size[0], resultbox_size[1], resultbox_size[2], resultbox_size[3]);
-    WINDOW *referencial_box = newwin(referencialbox_size[0], referencialbox_size[1], referencialbox_size[2], referencialbox_size[3]);
+    WINDOW *data_box = newwin(box_size_y/4 - commands_box_size - 1, box_size_x/4,  0, 0 );
+    WINDOW *command_box = newwin(commands_box_size, box_size_x/2 + 2, box_size_y/5 - 1, 0);
+    WINDOW *result_box = newwin(box_size_y/4 - commands_box_size - 1, box_size_x/6, 0, box_size_x/4);
+    WINDOW *referencial_box = newwin(box_size_y/4 - commands_box_size - 1, box_size_x/10, 0, box_size_x/2 - box_size_x/12 - 2);
 
     box(data_box, 0, 0);
     box(command_box, 0, 0);
@@ -43,31 +40,8 @@ void *menu_execution() {
             if (i == hightlight) {
                 wattron(command_box, A_REVERSE);
             }
-            mvwprintw(command_box, 2, i+i*30 + 8, options[i]);
+            mvwprintw(command_box, 1, i+i*50 + box_size_x/10, options[i]);
             wattroff(command_box, A_REVERSE);
-        }
-
-        if (new_y != yMax || new_x != xMax) {
-            xMax = new_x;
-            yMax = new_y;
-            getmaxyx(stdscr, new_y, new_x);
-
-            wresize(data_box, new_y - commands_box_size, new_x/4);
-            wresize(command_box, commands_box_size, new_x/2 + 1);
-            wresize(result_box, new_y - commands_box_size, new_x/6);
-            wresize(referencial_box, new_y - commands_box_size, new_x/10);
-            mvwin(command_box, new_y - commands_box_size, 0);
-
-            wclear(stdscr);
-            wclear(data_box);
-            wclear(command_box);
-            wclear(result_box);
-            wclear(referencial_box);
-
-            box(data_box, 0, 0);
-            box(command_box, 0, 0);
-            box(result_box, 0, 0);
-            box(referencial_box, 0, 0);
         }
 
         key = getch();
@@ -102,12 +76,12 @@ void *menu_execution() {
         }
 
         // draw to our windows
-        mvwprintw(data_box, 0, databox_size[1]/2, "Dados");
-        mvwprintw(command_box, 0, commandbox_size[1]/4 + commandbox_size[1]/5, "Comandos");
-        mvwprintw(result_box, 0, resultbox_size[1]/3, "Resultados");
-        mvwprintw(referencial_box, 0, referencialbox_size[1]/3, "Ajuste");
+        mvwprintw(data_box, 0, (box_size_x/4)/2, "Dados");
+        mvwprintw(command_box, 0, (box_size_x/2 + 2)/4 + (box_size_x/2 + 2)/5, "Comandos");
+        mvwprintw(result_box, 0, (box_size_x/6)/3, "Resultados");
+        mvwprintw(referencial_box, 0, (box_size_x/10)/3 + 2, "Ajuste");
 
-        write_on_data_box(data_box, result_box, referencial_box, databox_size[1], resultbox_size[1]/3 + 3, referencialbox_size[1]/3 + 3, referencialbox_size[0] - 2);
+        write_on_data_box(data_box, result_box, referencial_box, (box_size_x/4), (box_size_x/6)/3 + 3, (box_size_x/10)/3 + 3, box_size_y/4);
 
         wrefresh(stdscr);
         wrefresh(data_box);
@@ -118,21 +92,23 @@ void *menu_execution() {
 }
 
 void write_on_data_box(WINDOW *data_box, WINDOW *result_box, WINDOW *adjust_box, int dataSize, int resultSize, int adjustSize, int referencialSize) {
-    mvwprintw(data_box, 2, dataSize/4, "TEMPERATURA INTERNA");
-    mvwprintw(data_box, 3, dataSize/4, "TEMPERATURA REFERENTE");
-    mvwprintw(data_box, 4, dataSize/4, "TEMPERATURA EXTERNA");
-    mvwprintw(data_box, 5, dataSize/4, "TEMPERATURA POTENCIOMETRO");
+    mvwprintw(data_box, 1, dataSize/4, "TEMPERATURA INTERNA");
+    mvwprintw(data_box, 2, dataSize/4, "TEMPERATURA REFERENTE");
+    mvwprintw(data_box, 3, dataSize/4, "TEMPERATURA EXTERNA");
+    mvwprintw(data_box, 4, dataSize/4, "TEMPERATURA POTENCIOMETRO");
+    mvwprintw(data_box, 5, dataSize/4, "PID");
     mvwprintw(data_box, 6, dataSize/4, "RESISTOR");
     mvwprintw(data_box, 7, dataSize/4, "FAN");
 
-    mvwprintw(result_box, 2, resultSize, "%.2f ºC", temp_int);
-    mvwprintw(result_box, 3, resultSize, "%.2f ºC", temp_ref);
-    mvwprintw(result_box, 4, resultSize, "%.2f ºC", temp_ext);
-    mvwprintw(result_box, 5, resultSize, "%.2f ºC", temp_pot);
-    mvwprintw(result_box, 6, resultSize, "%.2f", resistor);
-    mvwprintw(result_box, 7, resultSize, "%.2f", fan);
+    mvwprintw(result_box, 1, resultSize, "%.2f ºC", temp_int);
+    mvwprintw(result_box, 2, resultSize, "%.2f ºC", temp_ref);
+    mvwprintw(result_box, 3, resultSize, "%.2f ºC", temp_ext);
+    mvwprintw(result_box, 4, resultSize, "%.2f ºC", temp_pot);
+    mvwprintw(result_box, 5, resultSize, "%.2f", pid);
+    mvwprintw(result_box, 6, resultSize, "%d", (int)resistor);
+    mvwprintw(result_box, 7, resultSize, "%d", (int)fan);
 
-    mvwprintw(adjust_box, 4, adjustSize, "PGUP");
-    mvwprintw(adjust_box, 7, adjustSize, "PGDOWN");
-    mvwprintw(adjust_box, referencialSize - 2, adjustSize, "%d ºC", (int) referencial_temp);
+    mvwprintw(adjust_box, 4, adjustSize - 3, "PGUP");
+    mvwprintw(adjust_box, 4, adjustSize + 3, "PGDOWN");
+    mvwprintw(adjust_box, referencialSize - 8, adjustSize, "%d ºC", (int) referencial_temp);
 }
