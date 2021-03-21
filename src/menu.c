@@ -55,7 +55,7 @@ void *menu_execution() {
                 hightlight = 1;
                 manual = 1;
                 break;
-            case KEY_UP:
+            case KEY_PPAGE:
                 if(manual) {
                     referencial_temp++;
                     if(referencial_temp > 99) {
@@ -63,7 +63,7 @@ void *menu_execution() {
                     }
                 }
                 break;
-            case KEY_DOWN:
+            case KEY_NPAGE:
                 if(manual) {
                     referencial_temp--;
                     if(referencial_temp < (int)temp_ext) {
